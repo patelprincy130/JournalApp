@@ -22,8 +22,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserEntity findByUsername(String username) {
-        return userRepository.findByUserName(username);
+    public UserEntity findByUsername(String userName) {
+        return userRepository.findByUserName(userName);
     }
 
     public Optional<UserEntity> getUserByID(String id){
