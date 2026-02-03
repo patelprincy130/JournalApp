@@ -28,11 +28,12 @@ public class JournalService {
     }
 
     public JournalEntity updateJournal(String id, JournalEntity journal) {
-        JournalEntity journal1=repo.findById(id).get();
-        journal1.setId(journal.getId());
-        journal1.setStory(journal.getStory());
-        journal1.setTitle(journal.getTitle());
-        return repo.save(journal1);
+        JournalEntity old=repo.findById(id).get();
+        if(old!=null){
+            old.setTitle( journal.getTitle()!=null && !journal.getTitle().equals("") ? journal.getTitle():old.getTitle());
+            old.setStory(journal.getStory()!=null && !journal.getTitle().equals("") ? journal.getStory() : old.getStory());
+        }
+        return repo.save(old);
     }
 
     public JournalEntity deleteJournal(String id) {
