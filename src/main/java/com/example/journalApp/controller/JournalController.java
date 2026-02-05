@@ -47,7 +47,7 @@ public class JournalController {
     public ResponseEntity<JournalEntity> getJournal(@PathVariable String id){
         JournalEntity journal= journalService.getJournal(id);
         if(journal!=null){
-            return new ResponseEntity<>(journalService.getJournal(id),HttpStatus.OK);
+            return new ResponseEntity<>(journal,HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
