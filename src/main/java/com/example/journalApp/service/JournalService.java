@@ -7,7 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLOutput;
 import java.util.List;
 
 @Service
@@ -19,12 +21,26 @@ public class JournalService {
     @Autowired
     UserService userService;
 
+    @Transactional
     public void saveEntry(JournalEntity journal,String userName){
-        UserEntity userIndb = userService.findByUsername(userName);
-        JournalEntity saved=repo.save(journal);
-        userIndb.getJournalEntityList().add(saved);
-        userService.createUser(userIndb);
+        try{
+            UserEntity userIndb = userService.findByUsername(userName);
+            JournalEntity saved=repo.save(journal);
+            userIndb.getJournalEntityList().add(saved);
+            //userIndb.setUserName(null); //if any exception occurs here then user wont be saved, journal will be saved but associated user won't be saved --> data inconsistency --> Transactional
+            userService.createUser(userIndb);
+        } catch (Exception e) {
+            e.printStackTrace();
+            //if this below line is commented then spring wont roll back.
+            throw new RuntimeException(e);
+        }
     }
+    /*
+    * 🔁 How Spring transactions actually work
+Spring rolls back ONLY IF:
+A RuntimeException or Error is thrown
+AND it is not caught inside the method
+* */
 
     public void saveEntry(JournalEntity journal) {
         repo.save(journal);
