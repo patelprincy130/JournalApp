@@ -48,4 +48,14 @@ public class UserService {
     public void deleteByUserName(String userName){
         userRepository.deleteByUserName(userName);
     }
+
+    public List<UserEntity> getAll() {
+        return userRepository.findAll();
+    }
+
+    public void saveAdmin(UserEntity user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRoles(Arrays.asList("USER","ADMIN"));
+        userRepository.save(user);
+    }
 }

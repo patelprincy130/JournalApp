@@ -32,7 +32,7 @@ public class JournalService {
         } catch (Exception e) {
             e.printStackTrace();
             //if this below line is commented then spring wont roll back.
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error occurred while creating new journal entry.",e);
         }
     }
     /*
@@ -63,13 +63,15 @@ AND it is not caught inside the method
 //        return repo.save(old);
 //    }
 
-    public JournalEntity deleteJournal(String id, String userName) {
+    public boolean deleteJournal(String id, String userName) {
         UserEntity userDB=userService.findByUsername(userName);
-        userDB.getJournalEntityList().removeIf(e->e.getId().equals(id));
-        JournalEntity journal=repo.findById(id).get();
-        repo.delete(journal);
-        userService.createUser(userDB);
-        return journal;
+        boolean removed=userDB.getJournalEntityList().removeIf(e->e.getId().equals(id));
+        if(removed){
+            JournalEntity journal=repo.findById(id).get();
+            repo.delete(journal);
+            userService.createUser(userDB);
+        }
+        return removed;
     }
 
 

@@ -22,6 +22,7 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
         http.
                 authorizeRequests() //to start authorizing requests coming on journal, other than all reqs are permitted to go without authorization.
                 .antMatchers("/journals/**","/user/**").authenticated()
+                .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
                 .and()  //direct applies to http.
                 .httpBasic();
