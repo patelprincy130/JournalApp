@@ -27,10 +27,15 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public void saveNewUser(UserEntity user){
-        user.setRoles(Arrays.asList("USER"));
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+    public boolean saveNewUser(UserEntity user){
+        try{
+            user.setRoles(Arrays.asList("USER"));
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            userRepository.save(user);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public UserEntity findByUsername(String userName) {

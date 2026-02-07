@@ -14,15 +14,17 @@ public class UserDetailsServiceImplt implements UserDetailsService { //how to fe
     @Autowired
     private UserRepository userRepository;
     @Override
-    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-        UserEntity user=userRepository.findByUserName(userName);
-        if(user==null)
-            throw new UsernameNotFoundException("User not found with username: "+user);
-        UserDetails userRes= User.builder()
-                .username(user.getUserName())
-                .password(user.getPassword())
-                .roles(user.getRoles().toArray(new String[0]))
-                .build();
-        return userRes;
+    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException { //we want to test this method,
+        UserEntity user=userRepository.findByUserName(userName);   //but we dont want to test this method of userRepo, so we can create mock obj of userRepo so instead of going to DB everytime we can provide fake data.
+        if(user!=null){
+            UserDetails userRes= User.builder()
+                    .username(user.getUserName())
+                    .password(user.getPassword())
+                    .roles(user.getRoles().toArray(new String[0]))
+                    .build();
+            return userRes;
+        }
+        throw new UsernameNotFoundException("User not found with username: "+user);
+
     }
 }
