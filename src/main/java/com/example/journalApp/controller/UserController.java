@@ -1,7 +1,9 @@
 package com.example.journalApp.controller;
 
 import com.example.journalApp.entity.UserEntity;
+import com.example.journalApp.entity.WeatherResponse;
 import com.example.journalApp.service.UserService;
+import com.example.journalApp.service.WeatherService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,4 +51,19 @@ public class UserController {
         userService.deleteByUserName(userName);
     }
 
+    @Autowired
+    private WeatherService weatherService;
+    @GetMapping("/{city}")
+    public ResponseEntity<String> greetings(@PathVariable String city){
+        Authentication authentication=SecurityContextHolder.getContext().getAuthentication();
+        String username=authentication.getName();
+        WeatherResponse greetings=weatherService.getResponse(city);
+        String greeting="";
+        if(greetings!=null){
+            int temp=greetings.getCurrent().getTemperature();
+            int feelsLike=greetings.getCurrent().getFeelslike();
+            greeting="Hi "+username+", current temperature is: "+temp+" in "+city+" and feels like "+feelsLike;
+        }
+        return new ResponseEntity<>(greeting,HttpStatus.OK);
+    }
 }
