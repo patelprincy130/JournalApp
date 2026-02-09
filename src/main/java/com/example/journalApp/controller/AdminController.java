@@ -1,6 +1,7 @@
 package com.example.journalApp.controller;
 
 
+import com.example.journalApp.config.AppCache;
 import com.example.journalApp.entity.UserEntity;
 import com.example.journalApp.service.UserService;
 import org.apache.catalina.User;
@@ -32,4 +33,11 @@ public class AdminController {
         userService.saveAdmin(user);
     }
 
+    @Autowired
+    private AppCache appCache;
+
+    @GetMapping("/clear-cache")
+    public void appCacheLoadChange(){
+        appCache.init();
+    }
 }

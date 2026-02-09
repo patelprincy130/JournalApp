@@ -1,5 +1,7 @@
 package com.example.journalApp.service;
 
+import com.example.journalApp.config.AppCache;
+import com.example.journalApp.controller.ConstantsPlacholders;
 import com.example.journalApp.entity.UserEntity;
 import com.example.journalApp.entity.WeatherResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +20,20 @@ public class WeatherService {
 
     @Value("${weather.api.key}")
     private String apiKey;
-    @Value("${weather.api.url}")
-    private String api;
+
+//    @Value("${weather.api.url}")
+//    private String api;  //from DB collectn
 
     @Autowired
     private RestTemplate restTemplate;
 
+    @Autowired
+    private AppCache appCache;
+
     public WeatherResponse getResponse(String city){
-        String finalApi=api.replace("{KEY}",apiKey).replace("{CITY}",city);
+//        String finalApi=api.replace("<key>",apiKey).replace("<city>",city);
+//        String finalApi=appCache.appCache.get("api").replace("<key>",apiKey).replace("<city>",city); //without enum
+        String finalApi=appCache.appCache.get(AppCache.keys.API.toString()).replace(ConstantsPlacholders.API_KEY,apiKey).replace(ConstantsPlacholders.CITY,city);
         ResponseEntity<WeatherResponse> response=restTemplate.exchange(finalApi, HttpMethod.GET,null, WeatherResponse.class);
         return response.getBody();
     }
