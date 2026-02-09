@@ -22,6 +22,8 @@ public class UserEntity {
     private String userName;
     @NonNull
     private String password;
+    private String email;
+    private boolean SentimentAnalysis;
     @DBRef
     private List<JournalEntity> journalEntityList=new ArrayList<>();
     private List<String> roles;
