@@ -28,7 +28,7 @@ public class UserRepoCriteria {
         Query query=new Query();
         query.addCriteria(Criteria.where("email").regex("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$"));
         //query.addCriteria(Criteria.where("email").ne(null).ne("")); //ne-not equal, gte-greaterthanequal
-        query.addCriteria(Criteria.where("SentimentAnalysis").is(true));
+        query.addCriteria(Criteria.where("sentimentAnalysis").is(true));
         //----other---
        // query.addCriteria(Criteria.where("roles").in("USER","ADMIN")); //woring with array
        // query.addCriteria(Criteria.where("sentimentAnalysis").type(JsonSchemaObject.Type.BsonType.BOOLEAN));//with type

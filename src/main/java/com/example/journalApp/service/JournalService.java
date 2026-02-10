@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLOutput;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,6 +25,7 @@ public class JournalService {
     @Transactional
     public void saveEntry(JournalEntity journal,String userName){
         try{
+            journal.setDate(LocalDateTime.now());
             UserEntity userIndb = userService.findByUsername(userName);
             JournalEntity saved=repo.save(journal);
             userIndb.getJournalEntityList().add(saved);

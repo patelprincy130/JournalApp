@@ -23,7 +23,7 @@ public class UserEntity {
     @NonNull
     private String password;
     private String email;
-    private boolean SentimentAnalysis;
+    private boolean sentimentAnalysis;
     @DBRef
     private List<JournalEntity> journalEntityList=new ArrayList<>();
     private List<String> roles;
