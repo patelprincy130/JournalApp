@@ -18,6 +18,8 @@ target/
 *.iws
 *.iml
 *.ipr
+application.properties
+ src/test/java/com/example/journalApp/service/EmailServiceTests.java
 
 ### NetBeans ###
 /nbproject/private/
