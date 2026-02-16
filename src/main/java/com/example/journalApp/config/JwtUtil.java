@@ -1,5 +1,6 @@
 package com.example.journalApp.config;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -37,5 +38,39 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+
+    public String extractUsername(String token) {
+        return extractAllClaims(token).getSubject();
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(getSignKey())
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
+    }
+
+    public String extractClaim(String token,String claim){
+        return extractAllClaims(token).get(claim,String.class);
+    }
+
+    public Date extractExpiration(String token){
+        return extractAllClaims(token).getExpiration();
+    }
+
+    private boolean isTokenExpired(String token){
+        return extractExpiration(token).before(new Date());
+    }
+
+    public boolean validateToken(String token, String username) {
+        final String extractUsername=extractUsername(token);
+        return (extractUsername.equals(username) && !isTokenExpired(token));
+    }
+
+    //use this one
+    public boolean validateToken(String token) {
+        return !isTokenExpired(token);
+    }
 
 }

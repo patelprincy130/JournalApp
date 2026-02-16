@@ -1,6 +1,8 @@
 package com.example.journalApp.config;
 
+import com.example.journalApp.filters.JwtFilter;
 import com.example.journalApp.service.UserDetailsServiceImplt;
+import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,11 +14,15 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.session.InvalidSessionStrategy;
 
 @Configuration
 @EnableWebSecurity
 public class SpringSecurity extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private JwtFilter jwtFilter;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {  //Authorization
@@ -24,11 +30,12 @@ public class SpringSecurity extends WebSecurityConfigurerAdapter {
                 authorizeRequests() //to start authorizing requests coming on journal, other than all reqs are permitted to go without authorization.
                 .antMatchers("/journals/**","/user/**").authenticated()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .anyRequest().permitAll()
-                .and()  //direct applies to http.
-                .httpBasic();
+                .anyRequest().permitAll();
+//                .and()  //direct applies to http.
+//                .httpBasic();      //removed http basic authentication so default login auth will be enabled. and before that our jwtfilter
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and().csrf().disable();
         //http.csrf().disable();
+        http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Autowired
